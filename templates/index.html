@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCTV Traffic Monitoring</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .camera-feed {
+            border: 2px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        .camera-feed a {
+            display: block;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            text-align: center;
+            width: 200px;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        select {
+            padding: 5px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .route-result {
+            margin-top: 30px;
+            border-top: 2px solid #ccc;
+            padding-top: 20px;
+        }
+        .route-result ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .route-result li {
+            padding: 5px;
+            background-color: #e0f7fa;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+        .map-container {
+            text-align: center;
+            margin-top: 50px;
+        }
+        img {
+            width: 70%;
+            height: auto;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>CCTV Traffic Monitoring & Route Finder</h1>
+
+    <!-- CCTV Camera Feed -->
+    <div class="camera-feed">
+        <h1>Live CCTV Feeds with Traffic Detection</h1>
+        <div class="grid-container">
+            {% for camera in cameras %}
+            <div class="camera-feed">
+                <h3>{{ camera.name }}</h3>
+                <img src="/camera/{{ loop.index0 }}" alt="{{ camera.name }}">
+            </div>
+            {% endfor %}
+        </div>
+
+    <!-- Form to Search Best Route -->
+    <div class="route-form">
+        <h2>Find Best Route</h2>
+        <label for="start">Start Point:</label>
+        <select name="start" id="start">
+            <option value="0">Kalibanteng</option>
+            <option value="1">Kaligarang</option>
+            <option value="2">Madukuro</option>
+            <option value="3">Kariadi</option>
+            <option value="4">Tugu Muda</option>
+            <option value="5">Indraprasta</option>
+            <option value="6">Bergota</option>
+            <option value="7">Simpang Kyai Saleh</option>
+        </select>
+    
+        <label for="end">End Point:</label>
+        <select name="end" id="end">
+            <option value="0">Kalibanteng</option>
+            <option value="1">Kaligarang</option>
+            <option value="2">Madukuro</option>
+            <option value="3">Kariadi</option>
+            <option value="4">Tugu Muda</option>
+            <option value="5">Indraprasta</option>
+            <option value="6">Bergota</option>
+            <option value="7">Simpang Kyai Saleh</option>
+        </select>
+    
+        <button type="button" id="find-route-btn">Find Route</button>
+    </div>
+    
+    <!-- Route Result -->
+    <div class="route-result" id="route-result">
+        <h2>Best Route</h2>
+        <ul id="route-list"></ul>
+    </div>
+    
+    <script>
+        document.getElementById('find-route-btn').addEventListener('click', function () {
+            const start = document.getElementById('start').value;
+            const end = document.getElementById('end').value;
+    
+            fetch(`/route?start=${start}&end=${end}`)
+                .then(response => response.json())
+                .then(data => {
+                    const routeList = document.getElementById('route-list');
+                    routeList.innerHTML = ''; // Clear previous results
+                    data.route.forEach(node => {
+                        const li = document.createElement('li');
+                        li.textContent = node;
+                        routeList.appendChild(li);
+                    });
+                })
+                .catch(error => console.error('Error fetching route:', error));
+        });
+    </script>
+
+    <!-- Traffic Map Visualization -->
+    <div class="map-container">
+        <h2>Traffic Map</h2>
+        <img src="/static/traffic_graph.png" alt="Traffic Graph">
+    </div>
+
+</body>
+</html>
