@@ -20,4 +20,14 @@ Flo adalah sistem navigasi berbasis web yang memanfaatkan deteksi kendaraan seca
 - Bergota
 - Simpang Kyai Saleh
 
+## 🛠️ Cara Kerja Sistem
+1. **Input CCTV** : Video streaming langsung dari titik strategis kota.
+2. **Deteksi YOLOv8** : Mengenali kendaraan seperti mobil, truk, bus, dan motor.
+3. **Klasifikasi lalu lintas** :
+- Lancar (<=5 kendaraan)
+- Padat (6-15 kendaraan)
+- Macet (>=15 kendaraan)
+4. **Graf Lalu Lintas** : Penetapan bobot berdasarkan kepadatan lalu lintas
+5. **Dijkstra** : Menghitung rute terpendek dari titik asal tujuan
+6. **UI Web** : Menampilak statistik lalu lintas dan rute optimal dari kondisi jalan
 
